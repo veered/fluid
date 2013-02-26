@@ -22,7 +22,7 @@ module Fluid
     response = RestClient.post(url, "equationInput=#{params.to_json}")
     parsed = JSON.parse(response)
     
-    parsed["latexResult"].strip
+    parsed["latexResult"].gsub(/\s+/, '')
     
   end
   
