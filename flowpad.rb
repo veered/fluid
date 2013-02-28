@@ -5,11 +5,9 @@ end
 require 'fluid'
 
 Shoes.app do
-  background "#FFFFFF"
 
   @stroke = []
   @strokes = []
-  
   @lines = [];
   
   motion do |left, top|
@@ -31,22 +29,42 @@ Shoes.app do
       @stroke = []
     end
   end
-
-  button("clear").click {
-    @lines.each(&:remove)
-    @stroke = []
-    @strokes = []
-  }
   
-  button("submit").click {
-    latex = Fluid.ocr(@strokes)
-    @preview.path = Fluid.preview(latex)
-    
-    debug latex
-    debug @preview.path
-  }
 
-  para "Preview:", :margin_left => 10, :margin_right => 15
-  @preview = image(:margin_top => 8)
+  stack do
+
+    flow :height => 60 do
+      background "#FFFFFF"
+
+      clear_button = flow(:width => 0.3, :height => 60) do
+        background '#990000'
+      end
+      clear_button.click {
+        @lines.each(&:remove)
+        @stroke = []
+        @strokes = []
+      }
+      
+      submit_button = flow(:width => 0.3, :height => 60) do
+        background '#009900'
+      end
+      submit_button.click {
+        unless @strokes.empty?
+          latex = Fluid.ocr(@strokes)
+          @preview.path = Fluid.preview(latex)
+        end
+      }
+
+      flow :width => 0.3, :margin_left => 10 do 
+        @preview = image :margin_top => 8
+      end
+      
+    end
+    
+    flow do
+      background "#FFFFFF"
+    end
+
+  end
   
 end
